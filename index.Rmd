@@ -1,0 +1,346 @@
+---
+title: "Proyecto 1"
+output: html_document
+---
+
+### Estudiante: Katherine Trejos Porras
+### Carné: C07869
+### Profesores: Manuel Vargas y Christian Birkel
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(hrbrthemes)
+library(dplyr)
+library(gridExtra)
+library(grid)
+library(tidyr)
+```
+
+
+### Importación de datos climáticos de Liberia de un archico CSV
+Se procede a importar los datos del clima de Liberia que se denomina como liberia_datos_climaticos.csv
+```{r datos, echo=TRUE, message=FALSE, warning=FALSE}
+clima_datos <- read.csv("liberia_datos_climaticos.csv", sep = ",", na.strings = "", dec = "," )
+```
+
+
+
+### Limpieza de los datos
+Se limpia los N/A que se encontraron en los datos para poder llevar a cabo de la manera correcta el proyecto
+```{r limpieza, echo=TRUE, message=FALSE, warning=FALSE}
+clima_datos [!complete.cases(clima_datos),]
+clima_datos <- na.omit(clima_datos)
+```
+
+
+
+### Renombramiento de los datos
+```{r nom, echo=TRUE, message=FALSE, warning=FALSE}
+clima_datos <- clima_datos %>%
+  rename(Temperatura = Temperatura..Celsius.,
+          Fecha = Date,
+          Humedad = HumedadRelativa....,
+          Velocidad = VelocidadViento..m.s.,
+          Lluvia = Lluvia..mm.,
+          Irradiación = Irradiacion..W.m2.,
+          Evaporación = EvapoTranspiracion..mm.
+  )
+```
+
+```{r fecha, echo=TRUE, message=FALSE, warning=FALSE}
+clima_datos <- clima_datos %>%
+  mutate(Fecha = as.Date(Fecha, format= "%d/%m/%Y"))
+```
+
+
+### Panel de histogramas en relación al clima de Liberia
+```{r fig.height=15, fig.width=15, message=FALSE, warning=FALSE, ,echo=TRUE}
+grid.arrange(ggplot(clima_datos, aes(y= Temperatura, group = 1)) + geom_histogram(
+  col = "#999900",
+  fill = "#666600"
+) +
+  ggtitle("Temperatura") + 
+  xlab("Frecuencia") +
+  ylab("Temperatura (°C)") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme_ipsum(
+    axis_text_size = 7,
+    ticks = TRUE,
+    axis = "y",
+    grid = "y,y"
+  ),
+ggplot(clima_datos, aes(y= Humedad, group = 1)) + geom_histogram(
+  col = "#CC6600",
+  fill = "#993300"
+) +
+  ggtitle("Humedad") + 
+  xlab("Frecuencia") +
+  ylab("Humedad (%)") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme_ipsum(
+    axis_text_size = 7,
+    ticks = TRUE,
+    axis = "y",
+    grid = "y,y"
+  ),
+ggplot(clima_datos, aes(y= Velocidad, group = 1)) + geom_histogram(
+  col = "#996699",
+  fill = "#CC99CC"
+) +
+  ggtitle("Velocidad") + 
+  xlab("Frecuencia") +
+  ylab("Velocidad (m/s)") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme_ipsum(
+    axis_text_size = 7,
+    ticks = TRUE,
+    axis = "y",
+    grid = "y,y"
+  ),
+ggplot(clima_datos, aes(y= Lluvia, group = 1)) + geom_histogram(
+  col = "#336699",
+  fill = "#003366"
+) +
+  ggtitle("Lluvia") + 
+  xlab("Frecuencia") +
+  ylab("Lluvia (mm)") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme_ipsum(
+    axis_text_size = 7,
+    ticks = TRUE,
+    axis = "y",
+    grid = "y,y"
+  ),
+ggplot(clima_datos, aes(y= Irradiación, group = 1)) + geom_histogram(
+  col = "#336633",
+  fill = "#669966"
+) +
+  ggtitle("Irradiación") + 
+  xlab("Frecuencia") +
+  ylab("Irradiación (Wm2)") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme_ipsum(
+    axis_text_size = 7,
+    ticks = TRUE,
+    axis = "y",
+    grid = "y,y"
+  ),
+ggplot(clima_datos, aes(y= Evaporación, group = 1)) + geom_histogram(
+  col = "#996666",
+  fill = "#663333"
+) +
+  ggtitle("Evaporación") + 
+  xlab("Frecuencia") +
+  ylab("Evaporación (mm)") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme_ipsum(
+    axis_text_size = 7,
+    ticks = TRUE,
+    axis = "y",
+    grid = "y,y"
+  ),
+nrow= 6, ncol =1)
+```
+
+```{r fig.height=15, fig.width=15, message=FALSE, warning=FALSE, ,echo=TRUE}
+k <- ggplot(clima_datos, aes(y= Temperatura, group = 1)) + geom_histogram(
+  col = "#999900",
+  fill = "#666600"
+) +
+  ggtitle("Temperatura") + 
+  xlab("Frecuencia") +
+  ylab("Temperatura (°C)") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme_ipsum(
+    axis_text_size = 7,
+    ticks = TRUE,
+    axis = "y",
+    grid = "y,y"
+  )
+o <- ggplot(clima_datos, aes(y= Humedad, group = 1)) + geom_histogram(
+  col = "#CC6600",
+   fill = "#993300"
+) +
+  ggtitle("Humedad") + 
+  xlab("Frecuencia") +
+  ylab("Humedad (%)") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme_ipsum(
+    axis_text_size = 7,
+    ticks = TRUE,
+    axis = "y",
+    grid = "y,y"
+  )
+p <- ggplot(clima_datos, aes(y= Velocidad, group = 1)) + geom_histogram(
+  col = "#996699",
+  fill = "#CC99CC"
+) +
+  ggtitle("Velocidad") + 
+  xlab("Frecuencia") +
+  ylab("Velocidad (m/s)") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme_ipsum(
+    axis_text_size = 7,
+    ticks = TRUE,
+    axis = "y",
+    grid = "y,y"
+  )
+d <- ggplot(clima_datos, aes(y= Lluvia, group = 1)) + geom_histogram(
+  col = "#336699",
+  fill = "#003366"
+) +
+  ggtitle("Lluvia") + 
+  xlab("Frecuencia") +
+  ylab("Lluvia (mm)") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme_ipsum(
+    axis_text_size = 7,
+    ticks = TRUE,
+    axis = "y",
+    grid = "y,y"
+  )
+m <- ggplot(clima_datos, aes(y= Irradiación, group = 1)) + geom_histogram(
+  col = "#336633",
+  fill = "#669966"
+) +
+  ggtitle("Irradiación") + 
+  xlab("Frecuencia") +
+  ylab("Irradiación (Wm2)") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme_ipsum(
+    axis_text_size = 7,
+    ticks = TRUE,
+    axis = "y",
+    grid = "y,y"
+  )
+n <- ggplot(clima_datos, aes(y= Evaporación, group = 1)) + geom_histogram(
+  col = "#996666",
+  fill = "#663333"
+) +
+  ggtitle("Evaporación") + 
+  xlab("Frecuencia") +
+  ylab("Evaporación (mm)") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme_ipsum(
+    axis_text_size = 7,
+    ticks = TRUE,
+    axis = "y",
+    grid = "y,y"
+  )
+
+grid.arrange(k,o,p,d,m,n,nrow = 6, ncol = 1)
+```
+
+### Líneas promediados
+Se crea un data para poder llevar a cabo el siguiente panel de promedios
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+datos_promediados <-
+  clima_datos %>%
+  select(Fecha, Temperatura, Humedad, Velocidad, Lluvia, Irradiación, Evaporación) %>% 
+  mutate(Fecha = as.Date(Fecha, format = "%d/%m/%Y"))%>%
+  group_by(Fecha = format(Fecha, "Y%/%m"))%>%
+  summarise(Temperatura = mean(Temperatura), Humedad = mean(Humedad), 
+            Velocidad = mean(Velocidad), Lluvia = sum(Lluvia),
+            Irradiación = mean(Irradiación), Evaporación = sum(Evaporación)
+            )
+```
+
+### Panel de líneas promediados en base a el clima de Liberia de los años del 2015 al 2019
+```{r fig.height=10, fig.width=10, message=FALSE, warning=FALSE, echo=TRUE}
+r <- ggplot(datos_promediados, aes(x= Fecha, y= Temperatura, group = 1)) + geom_line(
+  col = "#990000",
+) +
+    ggtitle("Temperatura") + 
+    xlab("Meses") +
+    ylab("Temperatura (°C)") +
+    geom_point()+
+    theme_ipsum()
+q <- ggplot(datos_promediados, aes(x= Fecha, y= Humedad, group = 1)) + geom_line(
+  col = "#666600",
+) +
+  ggtitle("Humedad") + 
+  xlab("Meses") +
+  ylab("Humedad (%)") +
+  geom_point()+
+  theme_ipsum()
+w <- ggplot(datos_promediados, aes(x= Fecha, y= Velocidad, group = 1)) + geom_line(
+  col = "#CC6633",
+) +
+  ggtitle("Velocidad") + 
+  xlab("Meses") +
+  ylab("Velocidad (m/s)") +
+  geom_point()+
+  theme_ipsum()
+u <- ggplot(datos_promediados, aes(x= Fecha, y= Irradiación, group = 1)) + geom_line(
+  col = "#0099CC",
+) +
+  ggtitle("Lluvia") + 
+  xlab("Meses") +
+  ylab("Lluvia (mm)") +
+  geom_point()+
+  theme_ipsum()
+t <- ggplot(datos_promediados, aes(x= Fecha, y= Irradiación, group = 1)) + geom_line(
+  col = "#666666",
+) +
+  ggtitle("Irradiación (Wm2)") + 
+  xlab("Meses") +
+  ylab("Irradiación (Wm2)") +
+  geom_point()+
+  theme_ipsum()
+j <- ggplot(datos_promediados, aes(x= Fecha, y= Evaporación, group = 1)) + geom_line(
+  col = "#996633",
+) +
+  ggtitle("Evaporación (mm)") + 
+  xlab("Meses") +
+  ylab("Evaporación") +
+  theme_ipsum()
+
+grid.arrange(r,q,w,u,t,j, nrow = 6, ncol = 1)
+```
+
+### Gráfico de nubes de puntos del clima de Liberia del 2015 al 2019
+```{r fig.height=10, fig.width=10, message=FALSE, warning=FALSE, echo=TRUE}
+f <- ggplot(clima_datos, aes(x = Fecha, y= Temperatura, group = 1)) + geom_point(
+  col = "#CC66CC",
+) +
+  ggtitle("Fechas") + 
+  xlab("Fechas") +
+  ylab("Temperatura (°C)") +
+  theme_ipsum()
+e <- ggplot(clima_datos, aes(x = Fecha, y= Humedad, group = 1)) + geom_point(
+  col = "#663333",
+) +
+  ggtitle("Humedad") + 
+  xlab("Fechas") +
+  ylab("Humedad (%)") +
+  theme_ipsum()
+s <- ggplot(clima_datos, aes(x = Fecha, y= Velocidad, group = 1)) + geom_point(
+  col = "#CC9900",
+) +
+  ggtitle("Velocidad") + 
+  xlab("Fechas") +
+  ylab("Velocidad (m/s)") +
+  theme_ipsum()
+l <- ggplot(clima_datos, aes(x = Fecha, y= Lluvia, group = 1)) + geom_point(
+  col = "#666699",
+) +
+  ggtitle("Lluvia") + 
+  xlab("Fechas") +
+  ylab("Lluvia (mm)") +
+  theme_ipsum()
+z <- ggplot(clima_datos, aes(x = Fecha, y= Irradiación, group = 1)) + geom_point(
+  col = "#00CC99",
+) +
+  ggtitle("Irradiación") + 
+  xlab("Fechas") +
+  ylab("Irradiación (Wm2)") +
+  theme_ipsum()
+w <- ggplot(clima_datos, aes(x = Fecha, y= Evaporación, group = 1)) + geom_point(
+  col = "#FF9933",
+) +
+  ggtitle("Evaporación") + 
+  xlab("Fechas") +
+  ylab("Evaporación (mm)") +
+  theme_ipsum()
+grid.arrange(f, e, s, l, z, w, nrow = 6, ncol = 1)
+```
